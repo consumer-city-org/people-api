@@ -38,7 +38,7 @@ namespace ConsumerCity.People.API.Controllers
         [HttpGet("v")]
         public string GetVersion()
         {
-            return "2";
+            return "4";
         }
     }
 }
