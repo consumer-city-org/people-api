@@ -28,6 +28,7 @@ namespace ConsumerCity.People.API
         {
 
             services.AddControllers();
+            services.AddHealthChecks();
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConsumerCity.People.API", Version = "v1" });
             });
@@ -47,6 +48,7 @@ namespace ConsumerCity.People.API
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
             });
         }
