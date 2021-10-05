@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace ConsumerCity.People.API.Controllers
 {
     [ApiController]
-    [Route("/api")]
-    public class TestController : ControllerBase
+    [Route("[controller]")]
+    public class PeopleController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<TestController> _logger;
+        private readonly ILogger<PeopleController> _logger;
 
-        public TestController(ILogger<TestController> logger)
+        public PeopleController(ILogger<PeopleController> logger)
         {
             _logger = logger;
         }
@@ -38,7 +38,7 @@ namespace ConsumerCity.People.API.Controllers
         [HttpGet("v")]
         public string GetVersion()
         {
-            return "4";
+            return "5";
         }
     }
 }
