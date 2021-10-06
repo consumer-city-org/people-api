@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -39,6 +44,48 @@ namespace ConsumerCity.People.API.Controllers
         public string GetVersion()
         {
             return "6";
+        }
+
+        [HttpGet("e")]
+        public ActionResult GetEnv()
+        {
+
+            var env = new {
+                AwsId = Environment.GetEnvironmentVariable("DynamoUsername"),
+                AwsPassword = Environment.GetEnvironmentVariable("DynamoPassword")
+            };
+
+            return Ok(env);
+        }
+
+        [HttpGet("p")]
+        public async Task<ActionResult> GetPeople()
+        {
+            var credentials = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AwsId"), Environment.GetEnvironmentVariable("AwsPassword"));
+            var config = new AmazonDynamoDBConfig() {
+                RegionEndpoint = RegionEndpoint.SAEast1
+            };
+            var client = new AmazonDynamoDBClient(credentials, config);
+
+            var context = new DynamoDBContext(client);
+
+            //var result = await context.LoadAsync<Person>("1");
+
+            //await context.SaveAsync(new Person() { Id = "1", Name = "Pedro"});
+
+            var result = await context.ScanAsync<Person>(new List<ScanCondition>()).GetRemainingAsync();
+
+            return Ok(result);
+
+        }
+
+        public class Person
+        {
+            [DynamoDBHashKey("id")]
+            public string Id { get; set; }
+
+            [DynamoDBProperty("name")]
+            public string Name { get; set; }
         }
     }
 }
