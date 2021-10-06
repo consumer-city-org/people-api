@@ -62,7 +62,7 @@ namespace ConsumerCity.People.API.Controllers
         public async Task<ActionResult> GetPeople()
         {
             try {
-                var credentials = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AwsId"), Environment.GetEnvironmentVariable("AwsPassword"));
+                var credentials = new BasicAWSCredentials(Environment.GetEnvironmentVariable("DynamoUsername"), Environment.GetEnvironmentVariable("DynamoPassword"));
                 var config = new AmazonDynamoDBConfig() {
                     RegionEndpoint = RegionEndpoint.SAEast1
                 };
