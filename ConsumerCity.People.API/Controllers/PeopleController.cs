@@ -43,7 +43,7 @@ namespace ConsumerCity.People.API.Controllers
         [HttpGet("v")]
         public string GetVersion()
         {
-            return "6";
+            return "7";
         }
 
         [HttpGet("e")]
@@ -61,22 +61,27 @@ namespace ConsumerCity.People.API.Controllers
         [HttpGet("p")]
         public async Task<ActionResult> GetPeople()
         {
-            var credentials = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AwsId"), Environment.GetEnvironmentVariable("AwsPassword"));
-            var config = new AmazonDynamoDBConfig() {
-                RegionEndpoint = RegionEndpoint.SAEast1
-            };
-            var client = new AmazonDynamoDBClient(credentials, config);
+            try {
+                var credentials = new BasicAWSCredentials(Environment.GetEnvironmentVariable("AwsId"), Environment.GetEnvironmentVariable("AwsPassword"));
+                var config = new AmazonDynamoDBConfig() {
+                    RegionEndpoint = RegionEndpoint.SAEast1
+                };
+                var client = new AmazonDynamoDBClient(credentials, config);
 
-            var context = new DynamoDBContext(client);
+                var context = new DynamoDBContext(client);
 
-            //var result = await context.LoadAsync<Person>("1");
+                //var result = await context.LoadAsync<Person>("1");
 
-            //await context.SaveAsync(new Person() { Id = "1", Name = "Pedro"});
+                //await context.SaveAsync(new Person() { Id = "1", Name = "Pedro"});
 
-            var result = await context.ScanAsync<Person>(new List<ScanCondition>()).GetRemainingAsync();
+                var result = await context.ScanAsync<Person>(new List<ScanCondition>()).GetRemainingAsync();
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception e) {
 
+                return BadRequest(e.Message);
+            }
         }
 
         public class Person
